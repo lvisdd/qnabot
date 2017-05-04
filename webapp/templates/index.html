@@ -16,6 +16,11 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- a-mmd -->
+    <script src="https://cdn.rawgit.com/aframevr/aframe/v0.5.0/dist/aframe-master.min.js"></script> 
+    <script src="https://cdn.rawgit.com/kripken/ammo.js/dcab07bf0e7f2b4b64c01dc45da846344c8f50be/builds/ammo.js"></script> 
+    <script src="https://cdn.rawgit.com/takahirox/aframe-outline/v1.1.0/build/aframe-outline.min.js"></script> 
+    <script src="https://cdn.rawgit.com/takahirox/a-mmd/v1.0.2/build/a-mmd.min.js"></script> 
 </head>
 
 <body>
@@ -38,7 +43,6 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Koe UI - Basic Chat UI Demo</h2>
-
           <div style="width:500px;">
 
               <koe-ui-basic
@@ -50,15 +54,34 @@
           </div>
           <p>Powerd by <a href="https://github.com/okajax/Koe-UI" target="_blank">KoeUI.js</a>
           </p>
-
         </div>
 
         <div class="col-md-6">
-          <h2>Web Chat Demo</h2>
-          <iframe style="height:480px; width:402px" src='https://webchat.botframework.com/embed/jmafaq_KelEr27Ir1p?s=tT2dc-5YW_0.cwA.P4E.W0lEOAi5EwD9d2e6WiXzn2gLmURCUgbCdtNPedfArvE'></iframe>
+          <h2>A-Frame MMD component Demo</h2>
+          <div>
+            <a-scene embedded style="height: 400px; width: 480px" antialias="true" outline>
+              <a-assets>
+                <img id="sky" src="https://cdn.rawgit.com/aframevr/aframe/master/examples/primitives/models/peach-gradient.jpg">
+              </a-assets>
 
-          <p>Powerd by <a href="https://dev.botframework.com/" target="_blank">Microsoft Bot Framework</a>
-          </p>
+              <a-entity position="0 15 8">
+              	<a-camera></a-camera>
+              </a-entity>
+
+              <a-entity mmd>
+                <a-entity mmd-model="model:https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/mmd/miku/miku_v2.pmd;
+                                     vpd:https://cdn.rawgit.com/takahirox/MMDLoader-app/master/assets/vpd/imas/makoto_basic.vpd;
+                                     physics:true; blink:true" position="0 0 0"></a-entity>
+              </a-entity>
+
+              <a-plane rotation="-90 0 0" color="#AAAAAA" height="200" width="200"></a-plane>
+
+              <a-sky src="#sky"></a-sky>
+
+              <a-light type="ambient" color="#888"></a-light>
+              <a-light color="#AAA" distance="100" intensity="0.4" type="point"></a-light>
+            </a-scene>
+          </div>
         </div>
       </div>
 
@@ -74,6 +97,19 @@
         </div>
       </div>
     </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Web Chat Demo</h2>
+          <iframe style="height:480px; width:402px" src='https://webchat.botframework.com/embed/jmafaq_KelEr27Ir1p?s=tT2dc-5YW_0.cwA.P4E.W0lEOAi5EwD9d2e6WiXzn2gLmURCUgbCdtNPedfArvE'></iframe>
+
+          <p>Powerd by <a href="https://dev.botframework.com/" target="_blank">Microsoft Bot Framework</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
 
     <script src="/static/js/vender/jquery-1.12.4.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script> 
