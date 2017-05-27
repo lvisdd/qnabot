@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +7,6 @@
     <title>FAQ Bot Demo</title>
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link href="/static/css/bootstrap3_player.css" rel="stylesheet"> -->
     <link href="/static/css/site.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -59,27 +58,70 @@
         <div class="col-md-6">
           <h2>A-Frame MMD component Demo</h2>
           <div>
-            <a-scene embedded style="height: 400px; width: 480px" antialias="true" outline>
-              <a-assets>
-                <img id="sky" src="https://cdn.rawgit.com/aframevr/aframe/master/examples/primitives/models/peach-gradient.jpg">
+            <a-scene embedded style="height: 400px; width: 440px" antialias="true" outline>
+              <a-assets timeout="15000">
+                  <img id="wall" src="/static/images/wall-769963_640.jpg">
+                  <img id="tile" src="/static/images/decorative-tiles-2187408_640.jpg">
+                  <img id="sky" src="/static/images/3146922801_f8d625f6f8_o.jpg">
+                  <img id="monet" src="/static/images/Claude_Monet_011.jpg">
+                  <img id="renoir" src="/static/images/Mlle_Irene_Cahen_d'Anvers.jpg">
+                  <img id="gogh" src="/static/images/VanGogh-starry_night_ballance1.jpg">
+                  <img id="degas" src="/static/images/Edgar_Germain_Hilaire_Degas_018.jpg">
               </a-assets>
 
               <a-entity position="0 15 8">
-              	<a-camera></a-camera>
+                <a-camera></a-camera>
               </a-entity>
 
-              <a-entity mmd>
-                <a-entity mmd-model="model:https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/mmd/miku/miku_v2.pmd;
+              <a-entity mmd="">
+                <a-entity mmd-model="model:/static/assets/Lat_miku_Ver2.31/Lat_miku_Ver2.31_Normal.pmd;
                                      vpd:https://cdn.rawgit.com/takahirox/MMDLoader-app/master/assets/vpd/imas/makoto_basic.vpd;
                                      physics:true; blink:true" position="0 0 0"></a-entity>
               </a-entity>
 
-              <a-plane rotation="-90 0 0" color="#AAAAAA" height="200" width="200"></a-plane>
+              <!-- sky -->
+              <a-sky src="#sky" rotation="0 -130 0"></a-sky>
 
-              <a-sky src="#sky"></a-sky>
+              <a-entity background>
 
-              <a-light type="ambient" color="#888"></a-light>
-              <a-light color="#AAA" distance="100" intensity="0.4" type="point"></a-light>
+              <!-- ceiling -->
+              <a-entity material="src:#tile; repeat:25 50.4; metalness:0.1;" position="0 90 0" rotation="90 0 0" geometry="primitive:plane;width:200;height:200"></a-entity>
+
+              <!-- ground -->
+              <a-entity material="src:#tile; repeat:25 50.4; metalness:0.1;" position="0 0 0" rotation="-90 0 0" geometry="primitive:plane;width:200;height:200"></a-entity>
+
+              <!-- monet -->
+              <a-entity>
+                <a-plane id="monet" class="picture" color="#FFF" src="#monet"   rotation="0 0 0" position="0 44 -95" height="36.93" width="30">
+                </a-plane>
+
+              <!-- renoir -->
+              <a-entity>
+                <a-plane id="renoir" class="picture" color="#FFF" src="#renoir" rotation="0 90 0" position="-95 44 0" height="36.93" width="30">
+                </a-plane>
+              </a-entity>
+
+              <!-- gogh -->
+              <a-entity>
+                <a-plane id="gogh" class="picture" color="#FFF" src="#gogh"     rotation="0 -90 0" position="95 44 0" height="32" width="40">
+                </a-plane>
+              </a-entity>
+
+              <!-- degas -->
+              <a-entity>
+                <a-plane id="degas" class="picture" color="#FFF" src="#degas"   rotation="0 180 0" position="0 44 95" height="36.93" width="30">
+                </a-plane>
+              </a-entity>
+
+              <!-- walls -->
+              <a-plane color="#CCC" src="#wall" rotation="0 180 0" position="0 0 100"   height="200" width="200"></a-plane>
+              <a-plane color="#CCC" src="#wall" rotation="0 -90 0" position="100 0 0"   height="200" width="200"></a-plane>
+              <a-plane color="#CCC" src="#wall" rotation="0 0 0"   position="0 0 -100"  height="200" width="200"></a-plane>
+              <a-plane color="#CCC" src="#wall" rotation="0 90 0"  position="-100 0 0"  height="200" width="200"></a-plane>
+
+              <a-text value="Hello, World!" tab-size="100" position="0 100 20" color="blue" wrap-count="360"></a-text>
+
+              </a-entity>
             </a-scene>
           </div>
         </div>
@@ -88,33 +130,22 @@
       <div class="row">
         <div class="col-md-12">
           <h4>デモBotのあそびかた</h4>
+          <h5>気象庁の<a href="http://www.jma.go.jp/jma/kishou/know/faq/index.html">よくある質問集</a>を登録しています。</h5>
+          <br>
+          <h5>質問の例）</h5>
           <ul>
-              <li>気象庁の<a href="http://www.jma.go.jp/jma/kishou/know/faq/index.html">よくある質問集</a>を登録しています。</li>
               <li>「みぞれ」とは何ですか？</li>
               <li>雪</li>
               <li>雨</li>
+              <li>踊ってください。</li>
           </ul>
         </div>
       </div>
     </div>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h2>Web Chat Demo</h2>
-          <iframe style="height:480px; width:402px" src='https://webchat.botframework.com/embed/jmafaq_KelEr27Ir1p?s=tT2dc-5YW_0.cwA.P4E.W0lEOAi5EwD9d2e6WiXzn2gLmURCUgbCdtNPedfArvE'></iframe>
-
-          <p>Powerd by <a href="https://dev.botframework.com/" target="_blank">Microsoft Bot Framework</a>
-          </p>
-        </div>
-      </div>
-    </div>
-
-
     <script src="/static/js/vender/jquery-1.12.4.min.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script> 
-    <!-- <script src="/static/js/bootstrap3_player.js"></script> -->
-    <script src="/static/js/audiojs/audio.min.js"></script>
+    <script src="/static/js/vender/bootstrap.min.js"></script> 
+    <script src="/static/js/vender/audiojs/audio.min.js"></script>
     <script>
       audiojs.events.ready(function() {
         var as = audiojs.createAll();

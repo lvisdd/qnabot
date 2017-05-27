@@ -21,7 +21,6 @@
                 </audio>
             </div>
         </div>
-
     </div>
 
     <div>
@@ -207,6 +206,35 @@
             this.text = e.target.value;
         }
 
+        function updateMMD() {
+          var background = document.querySelector('a-entity[background]');
+          background.parentNode.removeChild(background);
+          
+          // var el = document.querySelector('a-entity[mmd]');
+          // 
+          // var audio = 'https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/mmd/audios/wavefile_short.mp3';
+          // var audioDelayTime = '5.333333333333333';
+          // var afterglow = '2.0';          
+          // el.setAttribute('mmd', {audio: audio, audioDelayTime: audioDelayTime, afterglow: afterglow});
+
+          var mmdmodel = document.querySelector('a-entity[mmd-model]');
+          
+          var model = '/static/assets/Lat_miku_Ver2.31/Lat_miku_Ver2.31_Normal.pmd';
+          var vmd = 'https://cdn.rawgit.com/mrdoob/three.js/dev/examples/models/mmd/vmds/wavefile_v2.vmd';
+          var physics = 'true';
+          var blink = 'true';
+          mmdmodel.setAttribute('mmd-model', {model: model, vmd: vmd, physics: physics, blink: blink});
+        }
+
+        function updateModel(model, vpd, vmd, physics, blink) {
+          var el = document.querySelector('a-entity[mmd-model]');
+          if (vpd) {
+            el.setAttribute('mmd-model', {model: model, vpd: vpd, physics: physics, blink: blink});
+          } else {
+            el.setAttribute('mmd-model', {model: model, vmd: vmd, physics: physics, blink: blink});
+          }
+        }
+
         // メッセージ受信
         get_prms() {
             var that = this;
@@ -238,6 +266,15 @@
 
             // メッセージ送信が終わったら
             d_send.then(function () {
+                
+                // モデル更新
+                var model = '/static/assets/Lat_miku_Ver2.31/Lat_miku_Ver2.31_Normal.pmd';
+                var vpd = '';
+                var vmd = '/static/assets/routine_non-routine_motion_set_V104/I_notice_important_things.vmd';
+                var physics = 'true';
+                var blink = 'true';
+                updateModel(model, vpd, vmd, physics, blink);
+
                 // ここでポーリング呼出
                 $(".loader").fadeIn(200);
                 that.polling();
@@ -266,6 +303,13 @@
 
                             // 最新Botメッセージの記録用変数をリセット
                             that.lastestBotMsgId = '';
+
+                            var model = '/static/assets/Lat_miku_Ver2.31/Lat_miku_Ver2.31_Normal.pmd';
+                            var vpd = 'https://cdn.rawgit.com/takahirox/MMDLoader-app/master/assets/vpd/imas/makoto_basic.vpd';
+                            var vmd = '';
+                            var physics = 'true';
+                            var blink = 'true';
+                            updateModel(model, vpd, vmd, physics, blink);
                         }
 
                         // メッセージ数のチェック
@@ -284,9 +328,7 @@
                                 console.log('koe-ui-basic: There is a new message.');
 
                             }
-
                         }
-
 
                         // メッセージ総数の更新
                         that.msgAmount = that.msgObj.messages.length;
@@ -314,6 +356,11 @@
         }
 
         filter_text(text) {
+        
+            if (text == "はい。わかりました。") {
+                updateMMD();
+            }
+            
             if (text == "No match! Try changing the query terms!") {
                 return "ごめんなさい。よくわかりませんでした。";
             } else {

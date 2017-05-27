@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+import base64
 import os
+import re
 import subprocess
+import sys
 import tempfile
 import urllib.parse
 
@@ -21,6 +24,14 @@ app = Flask(__name__)
 @app.route('/')
 def home():
   return render_template('index.html')
+
+@app.route('/listen')
+def listen():
+  return render_template('exportwav.html')
+
+@app.route('/test')
+def test():
+  return render_template('test.html')
 
 @app.route("/favicon.ico")
 def favicon():
@@ -61,9 +72,9 @@ def tokenize():
   # return results
   return mecab_response(200, messages[0], results, dictionary)
 
-@app.errorhandler(400)
-def error400(error):
-    return macab_response(400, messages[1], None, None)
+# @app.errorhandler(400)
+# def error400(error):
+#     return macab_response(400, messages[1], None, None)
 
 def mecab_response(status, message, results, dictionary):
     return jsonify({'status': status, 'message': message, 'results': results, 'dictionary': dictionary}), status
@@ -206,6 +217,96 @@ def streamwav():
   except:
         pass
   return Response(generate(text, emotion, s, p, a, b, r, fm, u, jm, jf, g, z), mimetype="audio/x-wav")
+
+@app.route("/upload", methods=['GET', 'POST'], strict_slashes=False)
+def upload():
+  def recognize(wav):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+      sox = ['sox']
+      rate = ['-r','16000']
+      channels = ['-c','1']
+      srcwav = [wav]
+      name = os.path.basename(wav)
+      dstwav = [tmpdirname + '/' + name]
+      
+      cmd = sox + srcwav + rate + channels + dstwav
+      
+      print(" ".join(cmd))
+      c = subprocess.call(" ".join(cmd), shell=True)
+      print(c)
+      
+      tmplist = tmpdirname + '/' + 'filelist.txt'
+      f = open(tmplist,'w')
+      f.write("".join(dstwav) + '\n')
+      f.close()
+      
+      print("".join(dstwav))
+      
+      julius = ['julius']
+      am_gmm = ['-C','/usr/local/src/dictation-kit-v4.4/am-gmm.jconf']
+      main = ['-C','/usr/local/src/dictation-kit-v4.4/main.jconf']
+      input = ['-input','rawfile']
+      filelist = ['-filelist',tmplist]
+      outfile = ['-outfile']
+
+      cmd = julius + am_gmm + main + input + filelist + outfile
+      
+      name, ext = os.path.splitext("".join(dstwav))
+      outwav = name + '.out'
+      
+      print(" ".join(cmd))
+      c = subprocess.call(" ".join(cmd), shell=True)
+      print(c)
+      
+      print("".join(outwav))
+      
+      # with open("".join(outwav), 'r') as f:
+      #   print(f)
+      #   for row in f:
+      #     print(row.strip())
+      #   return f
+      text = ""
+      with open(outwav, 'r', encoding='utf-8') as f:
+        for row in f:
+          # print(row.strip())
+          m = re.search(r"sentence1: (?P<text>.*)", row)
+          if m:
+            return m.group('text')
+        return text
+
+  with tempfile.TemporaryDirectory() as tmpdirname:
+    # try:
+    if request.method == 'POST':
+      # print(request.values["fname"])
+      # print(request.values["data"])
+      wav = tmpdirname + '/' + str(request.values["fname"])
+      # wav = '/var/tmp/' + str(request.values["fname"])
+      print(wav)
+      # the_file = request.values["data"]
+      # wav = "./static/wav/" + request.values["fname"]
+      # the_file.save(wav)
+      # wav = tmpdirname + '/' + "voice.wav"
+      with open(wav, 'wb') as f:
+        data = request.values["data"].replace('data:audio/wav;base64,', '')
+        f.write(base64.b64decode(data))
+    else:
+      wav = "./static/wav/test.wav"
+    # except:
+    #   # pass
+    #   wav = "./static/wav/test.wav"
+    result = recognize(wav)
+  return result
+
+# @app.route("/wav")
+# def streamwav():
+#     def generate():
+#         with open("./static/wav/test.wav", "rb") as fwav:
+#             data = fwav.read(1024)
+#             while data:
+#                 yield data
+#                 data = fwav.read(1024)
+#     return Response(generate(), mimetype="audio/x-wav")
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0')
